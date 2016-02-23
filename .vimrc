@@ -181,6 +181,11 @@ let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
 set laststatus=2
 colorscheme zenburn
+
+hi SpecialKey term=bold ctermfg=239 guifg=#9ece9e guibg=#444444
+hi NonText term=bold ctermfg=240 gui=bold guifg=#5b605e
+
+
 let g:airline#extensions#whitespace#enabled = 0
 
 " au BufNewFile,BufRead *.py
