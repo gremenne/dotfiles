@@ -185,6 +185,10 @@ set laststatus=2
 if has('gui_running')
     set background=dark
     colorscheme solarized
+    hi SpecialKey term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
+    hi NonText term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
+    set guioptions-=T "remove toolbar
+
 else
     colorscheme zenburn
     hi SpecialKey term=bold ctermfg=239 guifg=#9ece9e guibg=#444444
