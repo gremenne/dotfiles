@@ -20,6 +20,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'xml.vim'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'jnurmine/Zenburn'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'davidhalter/jedi-vim'
 
 " All of your Plugins must be added before the following line
@@ -86,8 +87,14 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-colorscheme zenburn
+if has('gui_running')
+    set background=dark
+    colorscheme solarized
+else
+    colorscheme zenburn
+endif
 
+set guioptions-=T   "remove toolbar
 " au BufNewFile,BufRead *.py
 "     \ set tabstop=4
 "     \ set softtabstop=4
