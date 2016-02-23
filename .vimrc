@@ -18,11 +18,22 @@ Plugin 'jnurmine/Zenburn'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'Shougo/neocomplete.vim'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
+" Plugin 'xolox/vim-misc'
+" Plugin 'xolox/vim-easytags'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'Valloric/ListToggle'
+Plugin 'vim-scripts/taglist.vim'
+Plugin 'a.vim'
+Plugin 'http://github.com/sjl/gundo.vim.git'
+Plugin 'matchit.zip'
+Plugin 'tomtom/tcomment_vim'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'vim-scripts/argtextobj.vim'
+Plugin 'gustavo-hms/vim-cscope'
+Plugin 'vim-scripts/cscope.vim'
+Plugin 'craigemery/vim-autotag'
+Plugin 'vim-scripts/TagHighlight'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -60,6 +71,7 @@ set expandtab
 set listchars=tab:>-,eol:¬,space:·,extends:#,precedes:>
 set list
 
+set tags+=tags;~
 let python_highlight_all=1
 syntax on
 
@@ -69,10 +81,33 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
+let Tlist_Use_Right_Window = 1
+
 " let g:syntastic_always_populate_loc_list = 1
 " let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+nnoremap <leader>fa :call cscope#findInteractive(expand('<cword>'))<CR>
+
+" Some optional key mappings to search directly.
+
+" s: Find this C symbol
+nnoremap  <leader>fs :call cscope#find('s', expand('<cword>'))<CR>
+" g: Find this definition
+nnoremap  <leader>fg :call cscope#find('g', expand('<cword>'))<CR>
+" d: Find functions called by this function
+nnoremap  <leader>fd :call cscope#find('d', expand('<cword>'))<CR>
+" c: Find functions calling this function
+nnoremap  <leader>fc :call cscope#find('c', expand('<cword>'))<CR>
+" t: Find this text string
+nnoremap  <leader>ft :call cscope#find('t', expand('<cword>'))<CR>
+" e: Find this egrep pattern
+nnoremap  <leader>fe :call cscope#find('e', expand('<cword>'))<CR>
+" f: Find this file
+nnoremap  <leader>ff :call cscope#find('f', expand('<cword>'))<CR>
+" i: Find files #including this file
+nnoremap  <leader>fi :call cscope#find('i', expand('<cword>'))<CR>
 
 " au BufRead,BufNewFile *.py,*.pyw,*.c,*.cpp,*.h match BadWhitespace /\s\+$/
 
@@ -121,6 +156,9 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 " Plugin key-mappings.
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
+nnoremap <leader>t :TlistToggle<CR>
+nnoremap <leader>u :GundoToggle<CR>
+
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
