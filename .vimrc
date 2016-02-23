@@ -182,7 +182,7 @@ let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
 set laststatus=2
 
-cif has('gui_running')
+if has('gui_running')
     set background=dark
     colorscheme solarized
 else
