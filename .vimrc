@@ -133,7 +133,48 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+set laststatus=2
+
+if has('gui_running')
+    set background=dark
+    colorscheme solarized
+    hi SpecialKey term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
+    hi NonText term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
+    set guioptions-=T "remove toolbar
+
+else
+    colorscheme zenburn
+    hi SpecialKey term=bold ctermfg=239 guifg=#9ece9e guibg=#444444
+    hi NonText term=bold ctermfg=240 gui=bold guifg=#5b605e
+endif
+
+let g:airline#extensions#whitespace#enabled = 0
+
+" au BufNewFile,BufRead *.py
+"     \ set tabstop=4
+"     \ set softtabstop=4
+"     \ set shiftwidth=4
+"     \ set textwidth=79
+"     \ set expandtab
+"     \ set autoindent
+"     \ set fileformat=unix
+
 " neocomplete settings
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^.\t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:]*\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:]*\t]\%(\.\|->\)\|\h\w*::'
 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -168,47 +209,6 @@ nnoremap <leader>u :GundoToggle<CR>
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
-set laststatus=2
-
-if has('gui_running')
-    set background=dark
-    colorscheme solarized
-    hi SpecialKey term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
-    hi NonText term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
-    set guioptions-=T "remove toolbar
-
-else
-    colorscheme zenburn
-    hi SpecialKey term=bold ctermfg=239 guifg=#9ece9e guibg=#444444
-    hi NonText term=bold ctermfg=240 gui=bold guifg=#5b605e
-endif
-
-let g:airline#extensions#whitespace#enabled = 0
-
-" au BufNewFile,BufRead *.py
-"     \ set tabstop=4
-"     \ set softtabstop=4
-"     \ set shiftwidth=4
-"     \ set textwidth=79
-"     \ set expandtab
-"     \ set autoindent
-"     \ set fileformat=unix
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^.\t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:]*\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:]*\t]\%(\.\|->\)\|\h\w*::'
 
 augroup pencil
   autocmd!
