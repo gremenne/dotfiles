@@ -38,6 +38,8 @@ Plugin 'vim-scripts/TagHighlight'
 Plugin 'reedes/vim-wordy'
 Plugin 'reedes/vim-pencil'
 Plugin 'ervandew/supertab'
+Plugin 'mhinz/signify'
+Plugin 'reedes/vim-lexical'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -209,6 +211,14 @@ nnoremap <leader>u :GundoToggle<CR>
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
+let g:signify_vcs_list = [ 'svn', 'git' ]
+
+augroup lexical
+  autocmd!
+  autocmd FileType markdown,mkd call lexical#init()
+  autocmd FileType textile call lexical#init()
+  autocmd FileType text call lexical#init({ 'spell': 0 })
+augroup END
 
 augroup pencil
   autocmd!
