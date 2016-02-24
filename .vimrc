@@ -38,7 +38,7 @@ Plugin 'vim-scripts/TagHighlight'
 Plugin 'reedes/vim-wordy'
 Plugin 'reedes/vim-pencil'
 Plugin 'ervandew/supertab'
-Plugin 'mhinz/signify'
+Plugin 'mhinz/vim-signify'
 Plugin 'reedes/vim-lexical'
 
 " All of your Plugins must be added before the following line
