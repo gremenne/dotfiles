@@ -1,5 +1,12 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Global
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible              " be iMproved, required
 filetype off                  " required
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vundle
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -9,47 +16,38 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Add all your plugins here
-" Plugin 'vim-scripts/indentpython.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'xml.vim'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'jnurmine/Zenburn'
 Plugin 'altercation/vim-colors-solarized'
-" Plugin 'davidhalter/jedi-vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
 Plugin 'Shougo/neocomplete.vim'
-" Plugin 'xolox/vim-misc'
-" Plugin 'xolox/vim-easytags'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'Valloric/ListToggle'
-Plugin 'vim-scripts/taglist.vim'
 Plugin 'a.vim'
 Plugin 'http://github.com/sjl/gundo.vim.git'
 Plugin 'matchit.zip'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-scripts/argtextobj.vim'
-Plugin 'gustavo-hms/vim-cscope'
-Plugin 'vim-scripts/cscope.vim'
-Plugin 'craigemery/vim-autotag'
-Plugin 'vim-scripts/TagHighlight'
 Plugin 'reedes/vim-wordy'
 Plugin 'reedes/vim-pencil'
 Plugin 'ervandew/supertab'
 Plugin 'mhinz/vim-signify'
 Plugin 'reedes/vim-lexical'
+Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'kana/vim-textobj-user'
+Plugin 'bps/vim-textobj-python'
+Plugin 'mileszs/ack.vim'
+Plugin 'Shougo/neoyank.vim'
+Plugin 'Shougo/unite-outline'
+Plugin 'Shougo/unite.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
-filetype plugin indent on    " required
-filetype plugin on
 
-
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
 " Brief help
 " :PluginList       - lists configured plugins
 " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
@@ -59,84 +57,102 @@ filetype plugin on
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Sets how many lines of history VIM has to remember
+set history=700
+"
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+"
+" Set to auto read when a file is changed from the outside
+set autoread
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let mapleader = " "
+let g:mapleader = " "
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Mouse
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Redefine mouse Middle Click behavior
 set mouse=a
-set nu
-set backspace=indent,eol,start
 
-set encoding=utf-8
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set 7 lines to the cursor - when moving vertically using j/k
+set so=7
 
-"show existing tab with 4 spaces width
-set tabstop=4
+" Turn on the WiLd menu
+set wildmenu
 
-" when indenting with '>', use 4 spaces width
-set shiftwidth=4
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
 
-" On pressing tab, insert 4 spaces
-set expandtab
+"Always show current position
+set ruler
 
+" Height of the command bar
+set cmdheight=2
+
+" A buffer becomes hidden when it is abandoned
+set hidden
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" Show matching brackets when text indicator is over them
+set showmatch
+
+" How many tenths of a second to blink when matching brackets
+set mat=2
+
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable syntax highlighting
+syntax enable
+
+" Use Listchars to add visiual markers for whitespace
 set listchars=tab:>-,eol:¬,space:·,extends:#,precedes:>
 set list
 
-set tags+=tags;~
-let python_highlight_all=1
-syntax on
-
-filetype plugin indent on
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let Tlist_Use_Right_Window = 1
-
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-nnoremap <leader>fa :call cscope#findInteractive(expand('<cword>'))<CR>
-
-" Some optional key mappings to search directly.
-
-" s: Find this C symbol
-nnoremap  <leader>fs :call cscope#find('s', expand('<cword>'))<CR>
-" g: Find this definition
-nnoremap  <leader>fg :call cscope#find('g', expand('<cword>'))<CR>
-" d: Find functions called by this function
-nnoremap  <leader>fd :call cscope#find('d', expand('<cword>'))<CR>
-" c: Find functions calling this function
-nnoremap  <leader>fc :call cscope#find('c', expand('<cword>'))<CR>
-" t: Find this text string
-nnoremap  <leader>ft :call cscope#find('t', expand('<cword>'))<CR>
-" e: Find this egrep pattern
-nnoremap  <leader>fe :call cscope#find('e', expand('<cword>'))<CR>
-" f: Find this file
-nnoremap  <leader>ff :call cscope#find('f', expand('<cword>'))<CR>
-" i: Find files #including this file
-nnoremap  <leader>fi :call cscope#find('i', expand('<cword>'))<CR>
-
-" au BufRead,BufNewFile *.py,*.pyw,*.c,*.cpp,*.h match BadWhitespace /\s\+$/
-
-" let g:ctrlp_map = '<c-p>'
-" let g:ctrlp_cmd = 'CtrlP'
-
-" Trigger configuration.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-set splitbelow
-set splitright
-
-"split navigations
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-
-set laststatus=2
-
+" Set Colorshemes (and override some of the listchars highlights)
 if has('gui_running')
     set background=dark
     colorscheme solarized
@@ -150,18 +166,116 @@ else
     hi NonText term=bold ctermfg=240 gui=bold guifg=#5b605e
 endif
 
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+" Always turn on line numbering
+set nu
+
+" Default to splitting behavior
+set splitbelow
+set splitright
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Statusline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Configure default statusline
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+" Keep the statusline active at all times
+set laststatus=2
+
+" Tell Airline not to show trailing whitespace
 let g:airline#extensions#whitespace#enabled = 0
 
-" au BufNewFile,BufRead *.py
-"     \ set tabstop=4
-"     \ set softtabstop=4
-"     \ set shiftwidth=4
-"     \ set textwidth=79
-"     \ set expandtab
-"     \ set autoindent
-"     \ set fileformat=unix
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use spaces instead of tabs
+set expandtab
 
-" neocomplete settings
+" Be smart when using tabs ;)
+set smarttab
+
+" 1 tab == 4 spaces
+set shiftwidth=4
+set tabstop=4
+
+" Linebreak on 500 characters
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Keybindings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" move vertically by visual line
+nnoremap j gj
+nnoremap k gk
+
+"split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L
+nnoremap <C-H> <C-W><C-H>
+
+" more sane normal mode transitions and
+" fixes to the :W vs :w problem
+map ; :
+noremap ;; ;
+
+" for overkill, we will also setup commands for the capilalized versions
+cabbrev WQ wq
+cabbrev Wq wq
+cabbrev W w
+cabbrev Q q
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Syntastic (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Unite (Plugin):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:unite_source_history_yank_enable = 1
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec<cr>
+nnoremap <leader>j :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
+nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
+nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
+nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+
+" Custom mappings for the unite buffer
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+    " Play nice with supertab
+    let b:SuperTabDisabled=1
+    " Enable navigation with control-j and control-k in insert mode
+    " imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+    " imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+endfunction
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Neocomplete (Plugin):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -201,17 +315,44 @@ if !exists('g:neocomplete#keyword_patterns')
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
-nnoremap <leader>t :TlistToggle<CR>
-nnoremap <leader>u :GundoToggle<CR>
 
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Gundo (Plugin):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nnoremap <leader>u :GundoToggle<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Signify (Plugin):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:signify_vcs_list = [ 'svn', 'git' ]
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Python Text Objects (Plugin):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:textobj_python_no_default_key_mappings = 1
+
+xmap aF <Plug>(textobj-python-function-a)
+omap aF <Plug>(textobj-python-function-a)
+xmap iF <Plug>(textobj-python-function-i)
+omap iF <Plug>(textobj-python-function-i)
+
+xmap aC <Plug>(textobj-python-class-a)
+omap aC <Plug>(textobj-python-class-a)
+xmap iC <Plug>(textobj-python-class-i)
+omap iC <Plug>(textobj-python-class-i)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Autogroups
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 augroup lexical
   autocmd!
@@ -225,3 +366,6 @@ augroup pencil
   autocmd FileType markdown,mkd call pencil#init()
   autocmd FileType text         call pencil#init()
 augroup END
+
+autocmd FileType xml setlocal shiftwidth=2 tabstop=2
+autocmd FileType xsd setlocal shiftwidth=2 tabstop=2
