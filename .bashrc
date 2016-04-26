@@ -12,6 +12,10 @@ export RANGER_LOAD_DEFAULT_RC=FALSE
 
 export PS1='\[\e]0;\w\a\]\n\[\e[35m\][\D{%F %T}] \[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$'
 
+PATH=$PATH:~/bin
+
+stty -ixon
+
 # Sets the BASH window title automatically when invoked from SCREEN
 if [ "$TERM" = "screen" ]; then
   screen_set_window_title () {

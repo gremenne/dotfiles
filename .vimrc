@@ -25,17 +25,15 @@ Plugin 'Shougo/neocomplete.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'Valloric/ListToggle'
-Plugin 'a.vim'
 Plugin 'http://github.com/sjl/gundo.vim.git'
 Plugin 'matchit.zip'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-scripts/argtextobj.vim'
-Plugin 'reedes/vim-wordy'
 Plugin 'reedes/vim-pencil'
+Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 Plugin 'mhinz/vim-signify'
-Plugin 'reedes/vim-lexical'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'kana/vim-textobj-user'
@@ -44,7 +42,7 @@ Plugin 'mileszs/ack.vim'
 Plugin 'Shougo/neoyank.vim'
 Plugin 'Shougo/unite-outline'
 Plugin 'Shougo/unite.vim'
-
+Plugin 'alfredodeza/pytest.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 
@@ -200,9 +198,6 @@ let g:airline#extensions#whitespace#enabled = 0
 " Use spaces instead of tabs
 set expandtab
 
-" Be smart when using tabs ;)
-set smarttab
-
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
@@ -214,6 +209,18 @@ set tw=500
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Spell checking
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Pressing, ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
+
+" Shortcuts using <leader>
+map <leader>sn ]s
+map <leader>sp [s
+map <leader>sa zg
+map <leader>sf z=
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Keybindings
@@ -240,6 +247,8 @@ cabbrev Wq wq
 cabbrev W w
 cabbrev Q q
 
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Syntastic (Plugin)
@@ -267,6 +276,8 @@ autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
     " Play nice with supertab
     let b:SuperTabDisabled=1
+    :DisableWhitespace
+    setlocal nolist
     " Enable navigation with control-j and control-k in insert mode
     " imap <buffer> <C-j>   <Plug>(unite_select_next_line)
     " imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
@@ -281,17 +292,23 @@ endfunction
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-endif
+" if !exists('g:neocomplete#sources#omni#input_patterns')
+"     let g:neocomplete#sources#omni#input_patterns = {}
+" endif
 "let g:neocomplete#sources#omni#input_patterns.php = '[^.\t]->\h\w*\|\h\w*::'
 "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:]*\t]\%(\.\|->\)'
 "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:]*\t]\%(\.\|->\)\|\h\w*::'
+"
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+"let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
+" Auto-hide the preview window
+let g:neocomplete#enable_auto_close_preview = 1 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
@@ -318,9 +335,6 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
 
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Gundo (Plugin):
@@ -333,6 +347,19 @@ nnoremap <leader>u :GundoToggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:signify_vcs_list = [ 'svn', 'git' ]
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Jedi-vim (Plugin):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:jedi#show_call_signatures = "2"
+
+let g:jedi#goto_command = "<leader>d"
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = "<leader>s"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#completions_command = ""
+let g:jedi#rename_command = "<leader>r"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Python Text Objects (Plugin):
@@ -350,16 +377,10 @@ omap aC <Plug>(textobj-python-class-a)
 xmap iC <Plug>(textobj-python-class-i)
 omap iC <Plug>(textobj-python-class-i)
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Autogroups
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-augroup lexical
-  autocmd!
-  autocmd FileType markdown,mkd call lexical#init()
-  autocmd FileType textile call lexical#init()
-  autocmd FileType text call lexical#init({ 'spell': 0 })
-augroup END
 
 augroup pencil
   autocmd!
