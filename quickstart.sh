@@ -6,6 +6,8 @@ then
     return 1
 fi
 
+git clone https://github.com/vim/vim.git ~/non-blue-src/vim
+git clone https://github.com/tmux/tmux.git ~/non-blue-src/tmux
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 
@@ -32,5 +34,5 @@ link "./.vimrc" "$HOME/.vimrc"
 echo
 link "./.tmux.conf" "$HOME/.tmux.conf"
 echo
-link "./.vim/mthesaur.txt" "$HOME/.vim/mthesaur.txt"
+link "./configure.sh" "$HOME/.non-blue-src/vim/configure.sh"
 echo
