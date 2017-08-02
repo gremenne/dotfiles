@@ -6,9 +6,13 @@ then
     return 1
 fi
 
+mkdir -p ~/.vim/bundle/
+mkdir -p ~/
+
 git clone https://github.com/vim/vim.git ~/non-blue-src/vim
 git clone https://github.com/tmux/tmux.git ~/non-blue-src/tmux
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
 link() {
@@ -34,5 +38,5 @@ link "./.vimrc" "$HOME/.vimrc"
 echo
 link "./.tmux.conf" "$HOME/.tmux.conf"
 echo
-link "./configure.sh" "$HOME/.non-blue-src/vim/configure.sh"
+link "./configure.sh" "$HOME/non-blue-src/vim/configure.sh"
 echo

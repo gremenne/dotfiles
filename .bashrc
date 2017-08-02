@@ -14,7 +14,7 @@ export PS1='\[\e]0;\w\a\]\n\[\e[35m\][\D{%F %T}] \[\e[32m\]\u@\h \[\e[33m\]\w\[\
 
 PATH=$PATH:~/bin
 
-stty -ixon
+stty -ixany
 
 # Sets the BASH window title automatically when invoked from SCREEN
 if [ "$TERM" = "screen" ]; then
@@ -37,3 +37,18 @@ if [ "$TERM" = "screen" ]; then
   }
   PROMPT_COMMAND="screen_set_window_title; $PROMPT_COMMAND"
 fi
+
+function ranger-cd {
+  tempfile='/tmp/chosendir'
+  /usr/bin/ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+  test -f "$tempfile" &&
+  if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
+    cd -- "$(cat "$tempfile")"
+  fi
+  rm -f -- "$tempfile"
+}
+
+# This binds Ctrl-O to ranger-cd:
+bind '"\C-o":"ranger-cd\C-m"'
+
+

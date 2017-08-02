@@ -16,21 +16,22 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Add all your plugins here
-Plugin 'scrooloose/syntastic'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
+Plugin 'tpope/vim-surround'
+"Plugin 'scrooloose/syntastic'
+Plugin 'w0rp/ale'
 Plugin 'xml.vim'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'jnurmine/Zenburn'
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'Valloric/ListToggle'
 Plugin 'http://github.com/sjl/gundo.vim.git'
 Plugin 'matchit.zip'
-Plugin 'tomtom/tcomment_vim'
+Plugin 'tpope/vim-commentary'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-scripts/argtextobj.vim'
-Plugin 'reedes/vim-pencil'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 Plugin 'mhinz/vim-signify'
@@ -42,7 +43,24 @@ Plugin 'mileszs/ack.vim'
 Plugin 'Shougo/neoyank.vim'
 Plugin 'Shougo/unite-outline'
 Plugin 'Shougo/unite.vim'
-Plugin 'alfredodeza/pytest.vim'
+"Plugin 'alfredodeza/pytest.vim'
+Plugin 'diepm/vim-rest-console'
+Plugin 'godlygeek/tabular'
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plugin 'vimwiki/vimwiki'
+"Plugin 'shime/vim-livedown'
+Plugin 'junegunn/goyo.vim'
+Plugin 'junegunn/limelight.vim'
+Plugin 'francoiscabrol/ranger.vim'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'tpope/vim-obsession'
+Plugin 'dhruvasagar/vim-prosession'
+Plugin 'tmux-plugins/vim-tmux-focus-events'
+Plugin 'MattesGroeger/vim-bookmarks'
+Plugin 'vim-scripts/Align'
+Plugin 'tpope/vim-abolish'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 
@@ -54,6 +72,18 @@ call vundle#end()            " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Align (Plugin):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" We don't want to use aligns keymappings at all, the command syntax is enough
+function! s:RemoveConflictingAlignMaps()
+    if exists("g:loaded_AlignMapsPlugin")
+        AlignMapsClean
+    endif
+endfunction
+command! -nargs=0 RemoveConflictingAlignMaps call s:RemoveConflictingAlignMaps()
+silent! autocmd VimEnter * RemoveConflictingAlignMaps
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -125,6 +155,14 @@ set incsearch
 " Don't redraw while executing macros (good performance config)
 set lazyredraw
 
+" We usuially have a fast TTY connection, this gives us better scrolling and
+" general perf
+set ttyfast
+
+" Use the older regex engine, oddly it is aparently more performant on complex
+" matches (Which some plugins seem to want to use)
+set regexpengine=1
+
 " For regular expressions turn magic on
 set magic
 
@@ -150,19 +188,13 @@ syntax enable
 set listchars=tab:>-,eol:¬,space:·,extends:#,precedes:>
 set list
 
-" Set Colorshemes (and override some of the listchars highlights)
-if has('gui_running')
-    set background=dark
-    colorscheme solarized
-    hi SpecialKey term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
-    hi NonText term=bold ctermfg=9 gui=bold guifg=#657b83 guibg=NONE
-    set guioptions-=T "remove toolbar
-
-else
+function! s:reset_colors()
     colorscheme zenburn
     hi SpecialKey term=bold ctermfg=239 guifg=#9ece9e guibg=#444444
     hi NonText term=bold ctermfg=240 gui=bold guifg=#5b605e
-endif
+endfunction
+
+call s:reset_colors()
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
@@ -178,19 +210,47 @@ set splitbelow
 set splitright
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Statusline
+" => Statusline && Airline (Plugin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Configure default statusline
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+
+" Include formatting options in the status line
+" (not used, since we default to airline for our statusbar)
+"
+"set statusline+=[%{&fo}]
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
 " Keep the statusline active at all times
 set laststatus=2
 
-" Tell Airline not to show trailing whitespace
+" We don't need airlines whitespace plugin
 let g:airline#extensions#whitespace#enabled = 0
+
+" Explicitly enable/disable some of the plugins that we might
+" care about
+let g:airline#extensions#syntastic#enabled = 0
+let g:airline#extensions#virtualenv#enabled = 1
+let g:airline#extensions#eclim#enabled = 0
+let g:airline#extensions#ycm#enabled = 0
+
+let g:ale_statusline_format = ['x %d', '⚠ %d', '']
+
+call airline#parts#define_function('ALE', 'ALEGetStatusLine')
+call airline#parts#define_condition('ALE', 'exists("*ALEGetStatusLine")')
+
+let g:airline_section_error = airline#section#create_right(['ALE'])
+
+" Tweak what Airline displays, include formatoptions after the filetype
+" let g:airline_section_x = airline#util#wrap( airline#parts#filetype() . '[%{&fo}]' ,0)
+let g:airline_section_x = airline#parts#filetype() . ' ' . '[%{&fo}]'
+function! AirlineInit()
+    let g:airline_section_x = airline#section#create(['filetype', ' [%{&fo}]'])
+endfunction
+
+autocmd User AirlineAfterInit call AirlineInit()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -202,9 +262,9 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 
-" Linebreak on 500 characters
+" Linebreak on 79 characters
 set lbr
-set tw=500
+set tw=79
 
 set ai "Auto indent
 set si "Smart indent
@@ -230,16 +290,21 @@ map <leader>sf z=
 nnoremap j gj
 nnoremap k gk
 
-"split navigations
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L
-nnoremap <C-H> <C-W><C-H>
-
 " more sane normal mode transitions and
 " fixes to the :W vs :w problem
 map ; :
 noremap ;; ;
+
+" more agile movement between splits
+" map <leader>h <C-w><C-h>
+" map <leader>j <C-w><C-j>
+" map <leader>k <C-w><C-k>
+" map <leader>l <C-w><C-l>
+
+nnoremap <silent> <leader>sj :exe "resize +5"<CR>
+nnoremap <silent> <leader>sk :exe "resize -5"<CR>
+nnoremap <silent> <leader>sl :exe "vertical resize +5"<CR>
+nnoremap <silent> <leader>sh :exe "vertical resize -5"<CR>
 
 " for overkill, we will also setup commands for the capilalized versions
 cabbrev WQ wq
@@ -249,6 +314,78 @@ cabbrev Q q
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-tmux-navigator (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" let g:tmux_navigator_no_mappings = 1
+"
+" nnoremap <silent> <leader>h :TmuxNavigateLeft<cr>
+" nnoremap <silent> <leader>j :TmuxNavigateDown<cr>
+" nnoremap <silent> <leader>k :TmuxNavigateUp<cr>
+" nnoremap <silent> <leader>l :TmuxNavigateRight<cr>
+" nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+
+let g:tmux_navigator_disable_when_zoomed = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Ranger (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:ranger_map_keys = 0
+map <leader>r :Ranger<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Ranger Integration
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" function! RangerChooser()
+"     let temp = tempname()
+"     exec 'silent !ranger --choosefiles=' . shellescape(temp) . ' ' . expand('%:h')
+"     if !filereadable(temp)
+"         redraw!
+"         " Nothing to read.
+"         return
+"     endif
+"     let names = readfile(temp)
+"     if empty(names)
+"         redraw!
+"         " Nothing to open.
+"         return
+"     endif
+"     " Edit the first item.
+"     exec 'edit ' . fnameescape(names[0])
+"     " Add any remaning items to the arg list/buffer list.
+"     for name in names[1:]
+"         exec 'argadd ' . fnameescape(name)
+"     endfor
+"     redraw!
+" endfunction
+"
+" function! RangerCD()
+"     let temp = tempname()
+"     exec 'silent !ranger --choosedir=' . shellescape(temp) . ' ' . expand('%:h')
+"     if !filereadable(temp)
+"         redraw!
+"         " Nothing to read.
+"         return
+"     endif
+"     let names = readfile(temp)
+"     if empty(names)
+"         redraw!
+"         " Nothing to open.
+"         return
+"     endif
+"     " Edit the first item.
+"     exec 'cd' . fnameescape(names[0])
+"     redraw!
+" endfunction
+"
+" command! RangerChooser :call RangerChooser()
+" nnoremap <leader>r :<C-U>RangerChooser<CR>
+"
+" command! RangerCD :call RangerCD()
+" nnoremap <leader>cd :<C-U>RangerCD<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Syntastic (Plugin)
@@ -256,20 +393,33 @@ map <silent> <leader><cr> :noh<cr>
 
 " let g:syntastic_always_populate_loc_list = 1
 " let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => ALE (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nmap <silent> ]e <Plug>(ale_previous_wrap)
+nmap <silent> [e <Plug>(ale_next_wrap)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Unite (Plugin):
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call unite#custom#profile('source/vim_bookmarks', 'context', {
+    \   'start_insert': 0,
+    \   'keep_focus': 0,
+    \   'no_quit': 0,
+    \ })
 
 let g:unite_source_history_yank_enable = 1
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec<cr>
-nnoremap <leader>j :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
+nnoremap <leader>tt :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec<cr>
+nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
 nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
 nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+nnoremap <leader>m :<C-u>Unite -no-split -buffer-name=bookmark  vim_bookmarks<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
@@ -308,7 +458,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 "let g:neocomplete#sources#omni#input_patterns.perl ='\h\w*->\h\w*\|\h\w*::'
 
 " Auto-hide the preview window
-let g:neocomplete#enable_auto_close_preview = 1 
+let g:neocomplete#enable_auto_close_preview = 1
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
@@ -335,7 +485,6 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Gundo (Plugin):
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -353,13 +502,13 @@ let g:signify_vcs_list = [ 'svn', 'git' ]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:jedi#show_call_signatures = "2"
 
-let g:jedi#goto_command = "<leader>d"
-let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_command = "<leader>pd"
+let g:jedi#goto_assignments_command = "<leader>pg"
 let g:jedi#goto_definitions_command = ""
-let g:jedi#documentation_command = "<leader>s"
-let g:jedi#usages_command = "<leader>n"
+let g:jedi#documentation_command = "<leader>ps"
+let g:jedi#usages_command = "<leader>pn"
 let g:jedi#completions_command = ""
-let g:jedi#rename_command = "<leader>r"
+let g:jedi#rename_command = "<leader>pr"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Python Text Objects (Plugin):
@@ -377,16 +526,74 @@ omap aC <Plug>(textobj-python-class-a)
 xmap iC <Plug>(textobj-python-class-i)
 omap iC <Plug>(textobj-python-class-i)
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM Rest Console (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:vrc_trigger = '<C-j>'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Livedown (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nmap <leader>md :LivedownToggle<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Pandoc (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:pandoc#syntax#conceal#use = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vimwiki (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vimwiki likes to re-map TAB, which collides with my tab completion
+let g:vimwiki_table_mappings = 0
+let g:vimwiki_ext2syntax = {'.mdwiki': 'markdown'}
+
+let g:vimwiki_list = [{ 'path': '/home/gmennenga/vimwiki/', 'syntax': 'markdown', 'ext': '.mdwiki' }]
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Goyo (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! s:goyo_enter()
+  set nolist
+  Limelight
+endfunction
+
+function! s:goyo_leave()
+  Limelight!
+  call s:reset_colors()
+  set list
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+nmap <leader>f :Goyo<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Limelight (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Color name (:help cterm-colors) or ANSI code
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_priority = -1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Sessions.vim (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:session_autosave_periodic = 5
+let g:session_command_aliases = 1
+let g:session_autosave = 'yes'
+let g:session_autoload = 'no'
+set sessionoptions-=options
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Autogroups
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-augroup pencil
-  autocmd!
-  autocmd FileType markdown,mkd call pencil#init()
-  autocmd FileType text         call pencil#init()
-augroup END
-
+autocmd FileType python setlocal nosmartindent cindent fo=cq
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2
 autocmd FileType xsd setlocal shiftwidth=2 tabstop=2
