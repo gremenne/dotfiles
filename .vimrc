@@ -32,7 +32,7 @@ Plugin 'matchit.zip'
 Plugin 'tpope/vim-commentary'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-scripts/argtextobj.vim'
-Plugin 'davidhalter/jedi-vim'
+"Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 Plugin 'mhinz/vim-signify'
 Plugin 'michaeljsmith/vim-indent-object'
@@ -54,12 +54,13 @@ Plugin 'junegunn/goyo.vim'
 Plugin 'junegunn/limelight.vim'
 Plugin 'francoiscabrol/ranger.vim'
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'tpope/vim-obsession'
-Plugin 'dhruvasagar/vim-prosession'
+"Plugin 'tpope/vim-obsession'
+"Plugin 'dhruvasagar/vim-prosession'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
 Plugin 'MattesGroeger/vim-bookmarks'
 Plugin 'vim-scripts/Align'
 Plugin 'tpope/vim-abolish'
+Plugin 'dhruvasagar/vim-table-mode'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -525,6 +526,7 @@ xmap aC <Plug>(textobj-python-class-a)
 omap aC <Plug>(textobj-python-class-a)
 xmap iC <Plug>(textobj-python-class-i)
 omap iC <Plug>(textobj-python-class-i)
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM Rest Console (Plugin)
