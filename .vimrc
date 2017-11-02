@@ -553,7 +553,7 @@ let g:pandoc#syntax#conceal#use = 0
 let g:vimwiki_table_mappings = 0
 let g:vimwiki_ext2syntax = {'.mdwiki': 'markdown'}
 
-let g:vimwiki_list = [{ 'path': '/home/gmennenga/vimwiki/', 'syntax': 'markdown', 'ext': '.mdwiki' }]
+let g:vimwiki_list = [{ 'path': '/home/glumen/vimwiki/', 'syntax': 'markdown', 'ext': '.mdwiki' }]
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
