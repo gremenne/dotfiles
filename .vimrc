@@ -17,7 +17,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Add all your plugins here
 Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-session'
+"Plugin 'xolox/vim-session'
 Plugin 'tpope/vim-surround'
 "Plugin 'scrooloose/syntastic'
 Plugin 'w0rp/ale'
@@ -61,6 +61,7 @@ Plugin 'MattesGroeger/vim-bookmarks'
 Plugin 'vim-scripts/Align'
 Plugin 'tpope/vim-abolish'
 Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'thaerkh/vim-workspace'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -415,11 +416,11 @@ call unite#custom#profile('source/vim_bookmarks', 'context', {
 
 let g:unite_source_history_yank_enable = 1
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>tt :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec<cr>
+nnoremap <leader>tr :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec<cr>
 nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
 nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  -start-insert buffer<cr>
 nnoremap <leader>m :<C-u>Unite -no-split -buffer-name=bookmark  vim_bookmarks<cr>
 
 " Custom mappings for the unite buffer
@@ -533,6 +534,9 @@ omap iC <Plug>(textobj-python-class-i)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:vrc_trigger = '<C-j>'
+let g:vrc_curl_opts = {
+    \ '-i': '',
+\}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Livedown (Plugin)
@@ -554,6 +558,8 @@ let g:vimwiki_table_mappings = 0
 let g:vimwiki_ext2syntax = {'.mdwiki': 'markdown'}
 
 let g:vimwiki_list = [{ 'path': '/home/gmennenga/vimwiki/', 'syntax': 'markdown', 'ext': '.mdwiki' }]
+
+:nmap <Leader>wl <Plug>VimwikiUISelect
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -586,16 +592,22 @@ let g:limelight_priority = -1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Sessions.vim (Plugin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:session_autosave_periodic = 5
-let g:session_command_aliases = 1
-let g:session_autosave = 'yes'
-let g:session_autoload = 'no'
-set sessionoptions-=options
+" let g:session_autosave_periodic = 5
+" let g:session_command_aliases = 1
+" let g:session_autosave = 'yes'
+" let g:session_autoload = 'no'
+" set sessionoptions-=options
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-workspace (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nnoremap <leader>ws :ToggleWorkspace<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Autogroups
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-autocmd FileType python setlocal nosmartindent cindent fo=cq
+autocmd FileType * set formatoptions-=t
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2
 autocmd FileType xsd setlocal shiftwidth=2 tabstop=2
