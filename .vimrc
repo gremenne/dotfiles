@@ -27,7 +27,7 @@ Plugin 'jnurmine/Zenburn'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'http://github.com/sjl/gundo.vim.git'
+Plugin 'sjl/gundo.vim.git'
 Plugin 'matchit.zip'
 Plugin 'tpope/vim-commentary'
 Plugin 'easymotion/vim-easymotion'
@@ -48,20 +48,25 @@ Plugin 'diepm/vim-rest-console'
 Plugin 'godlygeek/tabular'
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plugin 'vim-pandoc/vim-pandoc-after'
 Plugin 'vimwiki/vimwiki'
-"Plugin 'shime/vim-livedown'
+Plugin 'shime/vim-livedown'
 Plugin 'junegunn/goyo.vim'
 Plugin 'junegunn/limelight.vim'
 Plugin 'francoiscabrol/ranger.vim'
 Plugin 'christoomey/vim-tmux-navigator'
-"Plugin 'tpope/vim-obsession'
-"Plugin 'dhruvasagar/vim-prosession'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
 Plugin 'MattesGroeger/vim-bookmarks'
 Plugin 'vim-scripts/Align'
 Plugin 'tpope/vim-abolish'
 Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'thaerkh/vim-workspace'
+Plugin 'tpope/vim-sleuth'
+Plugin 'tpope/vim-tbone'
+Plugin 'tpope/vim-afterimage'
+Plugin 'lervag/vimtex'
+Plugin 'ludovicchabant/vim-gutentags'
+Plugin 'metakirby5/codi.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -237,13 +242,7 @@ let g:airline#extensions#syntastic#enabled = 0
 let g:airline#extensions#virtualenv#enabled = 1
 let g:airline#extensions#eclim#enabled = 0
 let g:airline#extensions#ycm#enabled = 0
-
-let g:ale_statusline_format = ['x %d', '⚠ %d', '']
-
-call airline#parts#define_function('ALE', 'ALEGetStatusLine')
-call airline#parts#define_condition('ALE', 'exists("*ALEGetStatusLine")')
-
-let g:airline_section_error = airline#section#create_right(['ALE'])
+let g:airline#extensions#ale#enabled = 1
 
 " Tweak what Airline displays, include formatoptions after the filetype
 " let g:airline_section_x = airline#util#wrap( airline#parts#filetype() . '[%{&fo}]' ,0)
@@ -420,7 +419,7 @@ nnoremap <leader>tr :<C-u>Unite -no-split -buffer-name=files   -start-insert fil
 nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
 nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
 nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  -start-insert buffer<cr>
+nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  -start-insert buffer -short-source-names<cr>
 nnoremap <leader>m :<C-u>Unite -no-split -buffer-name=bookmark  vim_bookmarks<cr>
 
 " Custom mappings for the unite buffer
@@ -542,7 +541,14 @@ let g:vrc_curl_opts = {
 " => Livedown (Plugin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-nmap <leader>md :LivedownToggle<CR>
+" should the browser window pop-up upon previewing
+let g:livedown_open = 0
+
+" the port on which Livedown server will run
+let g:livedown_port = 8090
+
+" the browser to use
+let g:livedown_browser = "google-chrome-stable"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Pandoc (Plugin)
@@ -603,6 +609,11 @@ let g:limelight_priority = -1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 nnoremap <leader>ws :ToggleWorkspace<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vimtex (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vimtex_compiler_enabled = 0
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Autogroups
