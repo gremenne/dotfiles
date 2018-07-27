@@ -12,35 +12,11 @@ export RANGER_LOAD_DEFAULT_RC=FALSE
 
 export PS1='\[\e]0;\w\a\]\n\[\e[35m\][\D{%F %T}] \[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$'
 
-PATH=$PATH:~/bin
-
 stty -ixany
-
-# Sets the BASH window title automatically when invoked from SCREEN
-if [ "$TERM" = "screen" ]; then
-  screen_set_window_title () {
-    local HPWD="$PWD"
-    case $HPWD in
-      $HOME) HPWD="~";;
-
-
-      ## long name option:
-      # $HOME/*) HPWD="~${HPWD#$HOME}";;
-
-
-      ## short name option:
-      *) HPWD=`basename "$HPWD"`;;
-
-
-    esac
-    printf '\ek%s\e\\' "$HPWD"
-  }
-  PROMPT_COMMAND="screen_set_window_title; $PROMPT_COMMAND"
-fi
 
 function ranger-cd {
   tempfile='/tmp/chosendir'
-  /usr/bin/ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+  ranger --choosedir="$tempfile" "${@:-$(pwd)}"
   test -f "$tempfile" &&
   if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
     cd -- "$(cat "$tempfile")"
@@ -48,7 +24,21 @@ function ranger-cd {
   rm -f -- "$tempfile"
 }
 
+# -- Improved X11 forwarding through GNU Screen (or tmux).
+# If not in screen or tmux, update the DISPLAY cache.
+# If we are, update the value of DISPLAY to be that in the cache.
+function update-display()
+{
+  if [ -z "$STY" -a -z "$TMUX" ]; then
+    echo Updating ~/.display.txt with $DISPLAY
+    echo $DISPLAY > ~/.display.txt
+  else
+    export DISPLAY=`cat ~/.display.txt`
+    echo DISPLAY set to $DISPLAY
+  fi
+}
+
+update-display
+
 # This binds Ctrl-O to ranger-cd:
 bind '"\C-o":"ranger-cd\C-m"'
-
-
