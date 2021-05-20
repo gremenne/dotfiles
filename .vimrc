@@ -56,7 +56,7 @@ Plugin 'junegunn/limelight.vim'
 Plugin 'francoiscabrol/ranger.vim'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
-Plugin 'MattesGroeger/vim-bookmarks'
+" Plugin 'MattesGroeger/vim-bookmarks'
 Plugin 'vim-scripts/Align'
 Plugin 'tpope/vim-abolish'
 Plugin 'dhruvasagar/vim-table-mode'
@@ -67,6 +67,11 @@ Plugin 'tpope/vim-afterimage'
 Plugin 'lervag/vimtex'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'metakirby5/codi.vim'
+Plugin 'rust-lang/rust.vim'
+Plugin 'shougo/vimfiler.vim'
+Plugin 'preservim/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'mechatroner/rainbow_csv'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -407,20 +412,18 @@ nmap <silent> [e <Plug>(ale_next_wrap)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Unite (Plugin):
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-call unite#custom#profile('source/vim_bookmarks', 'context', {
-    \   'start_insert': 0,
-    \   'keep_focus': 0,
-    \   'no_quit': 0,
-    \ })
+" call unite#custom#profile('source/vim_bookmarks', 'context', {
+"     \   'start_insert': 0,
+"     \   'keep_focus': 0,
+"     \   'no_quit': 0,
+"     \ })
 
 let g:unite_source_history_yank_enable = 1
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>tr :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec<cr>
-nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
-nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
-nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  -start-insert buffer -short-source-names<cr>
-nnoremap <leader>m :<C-u>Unite -no-split -buffer-name=bookmark  vim_bookmarks<cr>
+" call unite#filters#matcher_default#use(['matcher_fuzzy'])
+nnoremap <leader>o :<C-u>Unite -buffer-name=outline -start-insert outline<cr>
+nnoremap <leader>y :<C-u>Unite -buffer-name=yank    history/yank<cr>
+nnoremap <leader>e :<C-u>Unite -buffer-name=buffer  -start-insert buffer -short-source-names<cr>
+" nnoremap <leader>m :<C-u>Unite -buffer-name=bookmark  vim_bookmarks<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
@@ -532,7 +535,7 @@ omap iC <Plug>(textobj-python-class-i)
 " => VIM Rest Console (Plugin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:vrc_trigger = '<C-j>'
+let g:vrc_trigger = '<leader>j'
 let g:vrc_curl_opts = {
     \ '-i': '',
 \}
@@ -610,10 +613,20 @@ let g:limelight_priority = -1
 
 nnoremap <leader>ws :ToggleWorkspace<CR>
 
+let g:workspace_autosave_ignore = ['nerdtree']
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vimtex (Plugin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:vimtex_compiler_enabled = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NERDTree (Plugin)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nmap <leader>n :NERDTreeFind<CR>
+
+autocmd vimleave * NERDTreeClose
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Autogroups

@@ -30,11 +30,11 @@ function ranger-cd {
 function update-display()
 {
   if [ -z "$STY" -a -z "$TMUX" ]; then
-    echo Updating ~/.display.txt with $DISPLAY
+    # echo Updating ~/.display.txt with $DISPLAY
     echo $DISPLAY > ~/.display.txt
   else
     export DISPLAY=`cat ~/.display.txt`
-    echo DISPLAY set to $DISPLAY
+    # echo DISPLAY set to $DISPLAY
   fi
 }
 
