@@ -1,17 +1,11 @@
 # /bin/bash
 
-if [ ! -f ./quickstart.sh ];
-then
-    echo "ERROR: CD TO MY DIRECTORY BEFORE YOU RUN ME!"
-    return 1
-fi
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null )
 
 mkdir -p ~/.vim/bundle/
 mkdir -p ~/
 
-#git clone https://github.com/vim/vim.git ~/non-ms-src/vim
-#git clone https://github.com/tmux/tmux.git ~/non-ms-src/tmux
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
@@ -30,13 +24,12 @@ link() {
     return 0
 }
 
-link "./.bashrc" "$HOME/.bashrc"
 echo
-link "./.inputrc" "$HOME/.inputrc"
+link "$SCRIPT_DIR/.bashrc" "$HOME/.bashrc"
 echo
-link "./.vimrc" "$HOME/.vimrc"
+link "$SCRIPT_DIR/.inputrc" "$HOME/.inputrc"
 echo
-link "./.tmux.conf" "$HOME/.tmux.conf"
+link "$SCRIPT_DIR/.vimrc" "$HOME/.vimrc"
 echo
-#link "./configure.sh" "$HOME/non-blue-src/vim/configure.sh"
+link "$SCRIPT_DIR/.tmux.conf" "$HOME/.tmux.conf"
 echo
