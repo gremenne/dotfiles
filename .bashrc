@@ -1,10 +1,10 @@
 # Some shortcuts for different directory listings
- alias ls='ls -hFA --color=tty'                # classify files in colour
- alias dir='ls -A --color=auto --format=vertical'
- alias vdir='ls -A --color=auto --format=long'
- alias ll='ls -Al'                             # long list
-# alias la='ls -A'                              # all but . and ..
- alias l='ls -CF'                              #
+alias ls='ls -hFA --color=tty'                # classify files in colour
+alias dir='ls -A --color=auto --format=vertical'
+alias vdir='ls -A --color=auto --format=long'
+alias ll='ls -Al'                             # long list
+alias la='ls -A'                              # all but . and ..
+alias l='ls -CF'                              #
 
 # alias myscreen='screen -RaAd -S DevScreen'
 alias myscreen='tmux attach-session -t DevScreen || tmux new-session -s DevScreen'
